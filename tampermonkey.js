@@ -127,6 +127,7 @@
     }
     
     function main() {
+        removePreview()
         var scrollContainer = document.querySelector('c-wiz[data-group-id][data-is-client-side] > div:nth-child(1)');
         var copyButtonInsertedCount = 0;
         // Iterating on threads and in the case of DMs, the whole message history is one thread
@@ -361,10 +362,32 @@
             }
         }
     }
-    
+
+    function simulateClick(element) {
+            // Simulate mouse down
+            element.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true, view: window }));
+            // Simulate mouse release
+            element.dispatchEvent(new MouseEvent("mouseup", { bubbles: true, cancelable: true, view: window }))
+        }
+
+    function removePreviews() {
+        buttonAriaLabels = ["Google Accounts, Web Page.", "Remove Build software better, together"]
+
+        buttonAriaLabels.forEach(label => removePreview(label))
+    }
+
+    function removePreview(label) {
+        button = Array.from(document.querySelectorAll('div[role="button"]')).filter(element => element["ariaLabel"]==label)[0]
+
+        if(button) {
+            simulateClick(button);
+        }
+    }
+
     addStyle();
     main();
     var el = document.documentElement;
     el.addEventListener('DOMSubtreeModified', debounce(main, 2000));
+    el.addEventListener('DOMSubtreeModified', debounce(removePreviews, 2000));
 
 })();
